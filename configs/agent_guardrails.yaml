@@ -1,0 +1,91 @@
+# SQL Security Guardrail Policy for In-Memory Analytical Execution
+
+execution:
+  timeout_seconds: 3.0
+  max_rows: 500
+  engine_max_memory: "256MB"
+  threads: 1
+  enable_external_access: false
+
+allowed_views:
+  v_orders:
+    - order_id
+    - customer_id
+    - order_status
+    - order_purchase_timestamp
+    - order_approved_at
+    - order_delivered_carrier_date
+    - order_delivered_customer_date
+    - order_estimated_delivery_date
+  v_order_items:
+    - order_id
+    - order_item_id
+    - product_id
+    - seller_id
+    - shipping_limit_date
+    - price
+    - freight_value
+  v_order_payments:
+    - order_id
+    - payment_sequential
+    - payment_type
+    - payment_installments
+    - payment_value
+  v_order_reviews:
+    - review_id
+    - order_id
+    - review_score
+    - review_comment_title
+    - review_comment_message
+    - review_creation_date
+    - review_answer_timestamp
+  v_customers:
+    - customer_id
+    - customer_unique_id
+    - customer_zip_code_prefix
+    - customer_city
+    - customer_state
+  v_products:
+    - product_id
+    - product_category_name
+    - product_name_lenght
+    - product_description_lenght
+    - product_photos_qty
+    - product_weight_g
+    - product_length_cm
+    - product_height_cm
+    - product_width_cm
+  v_sellers:
+    - seller_id
+    - seller_zip_code_prefix
+    - seller_city
+    - seller_state
+
+allowed_functions:
+  - SUM
+  - AVG
+  - COUNT
+  - MIN
+  - MAX
+  - ROUND
+  - STRFTIME
+  - DATE_TRUNC
+  - COALESCE
+  - NULLIF
+  - ABS
+
+prohibited_keywords:
+  - read_csv
+  - read_parquet
+  - read_json
+  - httpfs
+  - install
+  - load
+  - copy
+  - export
+  - import
+  - pragma
+  - duckdb_tables
+  - duckdb_views
+  - information_schema
+  - sqlite_master

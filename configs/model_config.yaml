@@ -1,0 +1,47 @@
+# Model & Analytics Configurations for Olist E-commerce
+
+rfm:
+  quantiles: 4
+  rfm_score_weights:
+    recency: 0.33
+    frequency: 0.33
+    monetary: 0.34
+
+segmentation:
+  algorithm: "kmeans"
+  k_range: [2, 10]
+  optimal_k: 4
+  scaling_method: "standard"
+  random_state: 42
+  features:
+    - "recency"
+    - "frequency"
+    - "monetary"
+    - "review_score_avg"
+
+repeat_purchase:
+  target_column: "is_repeat_buyer"
+  test_size: 0.2
+  cv_folds: 5
+  random_state: 42
+  metrics:
+    - "roc_auc"
+    - "f1"
+    - "precision"
+    - "recall"
+  models:
+    - "logistic_regression"
+    - "random_forest"
+    - "lightgbm"
+    - "xgboost"
+
+forecasting:
+  frequency: "W-SUN"  # Weekly aggregation for sales/revenue
+  target_col: "total_revenue"
+  horizon_weeks: 12
+  confidence_interval: 0.95
+
+explainability:
+  shap:
+    max_evals: 500
+    background_samples: 100

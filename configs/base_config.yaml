@@ -1,0 +1,39 @@
+project:
+  name: "InsightX AI"
+  version: "0.1.0"
+  random_seed: 42
+  architecture: "hybrid-cloud"
+
+# Multi-Environment Path Definitions
+environments:
+  local:
+    data_dir: "data/raw"
+    artifacts_dir: "artifacts"
+  kaggle:
+    data_dir: "/kaggle/input/brazilian-ecommerce"
+    artifacts_dir: "/kaggle/working/artifacts"
+  colab:
+    data_dir: "/content/data"
+    drive_artifacts_dir: "/content/drive/MyDrive/InsightX-AI/artifacts"
+    local_artifacts_dir: "/content/artifacts"
+
+# Chronological Temporal Split Boundaries (Point-in-Time Protocol)
+temporal_splits:
+  train:
+    start_date: "2017-01-01 00:00:00"
+    end_date: "2018-03-01 00:00:00"
+  validation:
+    start_date: "2018-03-01 00:00:01"
+    end_date: "2018-05-31 23:59:59"
+  test:
+    start_date: "2018-06-01 00:00:01"
+    end_date: "2018-08-31 23:59:59"
+
+profiling:
+  enabled: true
+  target_max_python_heap_mb: 250.0
+  target_max_duration_seconds: 15.0
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)-8s | %(name)s | %(message)s"
