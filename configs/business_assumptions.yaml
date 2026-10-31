@@ -1,0 +1,38 @@
+# Business Assumptions & Parameterized Constraints for Customer Intelligence
+#
+# These parameters govern models and financial projections where empirical Olist
+# data does not provide direct observations (e.g. wholesale margins, marketing CAC).
+# Every output using these parameters must be tagged as ProvenanceType.ASSUMED or DERIVED.
+
+clv_assumptions:
+  marketplace_take_rate: 0.15           # 15% marketplace commission rate on GMV
+  operating_margin: 0.20                # 20% operating profit margin on marketplace take
+  annual_discount_rate: 0.10            # 10% annual cost of capital / discount rate
+  assumed_annual_retention_rate: 0.05   # Conservative retention rate for sparse repeat base
+
+churn_assumptions:
+  active_lookback_days: 365             # Lookback window to define active eligible cohort
+  forward_prediction_horizon_days: 90   # Forward observation window for churn/repeat label
+  heuristic_inactivity_days: 180        # Days of inactivity to flag heuristic churn risk
+
+rfm_assumptions:
+  recency_quantiles: 4                  # Quartiles for recency (1 to 4)
+  monetary_quantiles: 4                 # Quartiles for monetary spend (1 to 4)
+  frequency_rule_bins:                  # Discrete integer scoring due to 96.9% single-purchase sparsity
+    single_order: 1
+    repeat_order: 2
+    frequent_order: 3
+    vip_order: 4
+  rfm_weights:
+    recency: 0.33
+    frequency: 0.33
+    monetary: 0.34
+
+segmentation_assumptions:
+  log_transform_columns:
+    - "recency"
+    - "monetary"
+    - "total_freight"
+    - "avg_installments"
+  min_stability_ari: 0.75               # Minimum Adjusted Rand Index across random seeds
+  stability_seeds: [42, 43, 44, 45, 46]
