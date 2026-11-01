@@ -55,6 +55,31 @@ def _minmax_normalize(scores: pd.Series) -> pd.Series:
     return (scores - lo) / (hi - lo + _EPS)
 
 
+def _zscore_normalize(scores: pd.Series) -> pd.Series:
+    """Z-score standardize and sigmoid-map to [0, 1]."""
+    std = scores.std()
+    if std < _EPS or np.isnan(std):
+        return pd.Series(np.zeros(len(scores), dtype=float), index=scores.index)
+    z = (scores - scores.mean()) / (std + _EPS)
+    return 1.0 / (1.0 + np.exp(-z))
+
+
+def _rank_normalize(scores: pd.Series) -> pd.Series:
+    """Percentile rank normalise to [0, 1]."""
+    if len(scores) <= 1:
+        return pd.Series(np.zeros(len(scores), dtype=float), index=scores.index)
+    ranks = scores.rank(method="average", ascending=True)
+    return (ranks - 1.0) / (len(scores) - 1.0)
+
+
+def _normalize_scores(scores: pd.Series, mode: str = "minmax") -> pd.Series:
+    if mode == "zscore":
+        return _zscore_normalize(scores)
+    elif mode == "rank":
+        return _rank_normalize(scores)
+    return _minmax_normalize(scores)
+
+
 def _make_evidence(
     claim_id: str, table_name: str, column_name: str, key: str,
     value: Any, unit: str, provenance: str, linkage: str,
@@ -117,6 +142,7 @@ class HybridRecommender:
         top_k: int = 10,
         exclude_purchased: bool = True,
         fallback_to_popularity: bool = True,
+        normalisation_mode: str = "minmax",
     ):
         if not components:
             raise ValueError("components list must be non-empty.")
@@ -130,6 +156,7 @@ class HybridRecommender:
         self.top_k = top_k
         self.exclude_purchased = exclude_purchased
         self.fallback_to_popularity = fallback_to_popularity
+        self.normalisation_mode = normalisation_mode
 
         # Fitted state
         self._catalog_products: Optional[List[str]] = None
@@ -250,7 +277,7 @@ class HybridRecommender:
                 self._catalog_products
             ).fillna(0.0)
 
-            normalised = _minmax_normalize(comp_series)
+            normalised = _normalize_scores(comp_series, mode=self.normalisation_mode)
             hybrid_scores = hybrid_scores + (weight / total_weight) * normalised
 
         # If no component returned any recommendations → fallback
