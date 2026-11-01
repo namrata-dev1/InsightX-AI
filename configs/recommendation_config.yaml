@@ -1,0 +1,59 @@
+# InsightX-AI Phase 3 - Recommendation Data Foundation Configuration
+#
+# All monetary values are in BRL (Brazilian Real).
+# All dates are UTC.
+# Cutoff dates must align with Phase 1/2 temporal split defaults.
+
+interaction_matrix:
+  # Minimum number of purchases for a customer-product pair to appear in the matrix.
+  # Setting to 1 includes all observed interactions (including one-time buyers).
+  min_interactions: 1
+
+  # Observation cutoff: only orders with purchase timestamp <= this date are included.
+  # Aligns with Phase 1 DEFAULT_TRAIN_END to prevent temporal leakage in feature building.
+  cutoff_date: "2018-03-01 00:00:00"
+
+  # Accepted order statuses for interaction data.
+  # Only 'delivered' orders carry confirmed purchase signals.
+  valid_order_statuses:
+    - "delivered"
+    - "shipped"
+    - "invoiced"
+
+product_metadata:
+  # Fill value for missing numeric product features (e.g., missing weight).
+  fill_missing_numeric: 0.0
+
+  # Label used when product_category_name is missing or has no translation.
+  unknown_category_label: "unknown"
+
+  # Price bands for discretizing product median price.
+  # Boundaries in BRL.
+  price_band_boundaries:
+    - 0.0
+    - 50.0
+    - 150.0
+    - 500.0
+
+  # Labels for price bands (must be len(price_band_boundaries) - 1 + 1 = 4 values)
+  price_band_labels:
+    - "budget"
+    - "mid"
+    - "premium"
+    - "luxury"
+
+temporal_split:
+  # Chronological split boundaries for recommendation interaction data.
+  # Must be consistent with Phase 1 TemporalSplitter defaults.
+  train_start: "2017-01-01"
+  train_end: "2018-03-01"
+  val_end: "2018-05-31"
+  test_end: "2018-08-31"
+
+sparsity:
+  # Expected repeat-purchase rate for Olist (~3.1% based on Phase 1 empirical measurement).
+  # Used only for sparsity reporting — not as a hard cutoff.
+  expected_repeat_rate_approx: 0.031
+
+  # Minimum number of products in catalog to flag cold-start risk.
+  min_catalog_size_warning_threshold: 100
