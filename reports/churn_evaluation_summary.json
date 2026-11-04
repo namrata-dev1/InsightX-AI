@@ -1,0 +1,57 @@
+{
+  "active_cohort_size": 57511,
+  "churn_rate": 0.9931317487089426,
+  "heuristic_baseline": {
+    "roc_auc": 0.5842,
+    "pr_auc": 0.9947,
+    "brier_score": 0.5249
+  },
+  "calibrated_logistic_regression": {
+    "roc_auc": 0.6332,
+    "pr_auc": 0.9957,
+    "brier_score": 0.0068,
+    "precision": 0.9931,
+    "recall": 0.9999,
+    "f1": 0.9965,
+    "precision_at_top_10_pct": 0.9972,
+    "test_sample_size": 57511,
+    "churn_rate_actual": 0.9931
+  },
+  "top_features": [
+    {
+      "feature": "total_orders",
+      "importance_score": 0.3206,
+      "direction": "decreases_risk",
+      "attribution_method": "absolute_standardized_coefficient",
+      "normalized_score": 0.2082
+    },
+    {
+      "feature": "avg_order_value",
+      "importance_score": 0.2993,
+      "direction": "increases_risk",
+      "attribution_method": "absolute_standardized_coefficient",
+      "normalized_score": 0.1944
+    },
+    {
+      "feature": "recency_days",
+      "importance_score": 0.2379,
+      "direction": "increases_risk",
+      "attribution_method": "absolute_standardized_coefficient",
+      "normalized_score": 0.1545
+    },
+    {
+      "feature": "avg_basket_size",
+      "importance_score": 0.2126,
+      "direction": "decreases_risk",
+      "attribution_method": "absolute_standardized_coefficient",
+      "normalized_score": 0.1381
+    },
+    {
+      "feature": "avg_review_score",
+      "importance_score": 0.198,
+      "direction": "decreases_risk",
+      "attribution_method": "absolute_standardized_coefficient",
+      "normalized_score": 0.1286
+    }
+  ]
+}

@@ -1,0 +1,445 @@
+{
+  "temporal_split": {
+    "train_end": "2018-03-01 00:00:00",
+    "val_end": "2018-05-31 23:59:59",
+    "test_end": "2018-08-31 23:59:59",
+    "train_orders": 59099,
+    "val_orders": 21022,
+    "test_orders": 18971,
+    "customer_overlap_train_val": 406,
+    "customer_overlap_train_test": 292
+  },
+  "rfm_distribution": [
+    {
+      "rfm_segment": "About to Sleep",
+      "customer_count": 13406,
+      "customer_share_pct": 24.26,
+      "mean_recency_days": 184.13245710875728,
+      "mean_frequency": 1.0,
+      "mean_monetary": 160.29808044433594
+    },
+    {
+      "rfm_segment": "Lost",
+      "customer_count": 6946,
+      "customer_share_pct": 12.57,
+      "mean_recency_days": 311.3676921969479,
+      "mean_frequency": 1.0,
+      "mean_monetary": 62.06096267700195
+    },
+    {
+      "rfm_segment": "Promising",
+      "customer_count": 6904,
+      "customer_share_pct": 12.49,
+      "mean_recency_days": 62.13242902665122,
+      "mean_frequency": 1.0,
+      "mean_monetary": 43.10597229003906
+    },
+    {
+      "rfm_segment": "Standard Customers",
+      "customer_count": 6668,
+      "customer_share_pct": 12.06,
+      "mean_recency_days": 96.44448410317936,
+      "mean_frequency": 1.0013497300539893,
+      "mean_monetary": 254.5238037109375
+    },
+    {
+      "rfm_segment": "Potential Loyalists",
+      "customer_count": 6665,
+      "customer_share_pct": 12.06,
+      "mean_recency_days": 63.6426736684171,
+      "mean_frequency": 1.0,
+      "mean_monetary": 82.05268096923828
+    },
+    {
+      "rfm_segment": "Hibernating High Spenders",
+      "customer_count": 6558,
+      "customer_share_pct": 11.87,
+      "mean_recency_days": 312.78062214089664,
+      "mean_frequency": 1.0,
+      "mean_monetary": 270.6912841796875
+    },
+    {
+      "rfm_segment": "Recent High Spenders",
+      "customer_count": 6516,
+      "customer_share_pct": 11.79,
+      "mean_recency_days": 30.052952731737264,
+      "mean_frequency": 1.0,
+      "mean_monetary": 243.0948944091797
+    },
+    {
+      "rfm_segment": "Loyal Customers",
+      "customer_count": 1222,
+      "customer_share_pct": 2.21,
+      "mean_recency_days": 100.20275777414075,
+      "mean_frequency": 2.0335515548281506,
+      "mean_monetary": 299.49761962890625
+    },
+    {
+      "rfm_segment": "At Risk",
+      "customer_count": 319,
+      "customer_share_pct": 0.58,
+      "mean_recency_days": 302.1227586206897,
+      "mean_frequency": 2.0877742946708464,
+      "mean_monetary": 278.72320556640625
+    },
+    {
+      "rfm_segment": "Champions",
+      "customer_count": 64,
+      "customer_share_pct": 0.12,
+      "mean_recency_days": 52.19171875,
+      "mean_frequency": 3.59375,
+      "mean_monetary": 504.3656311035156
+    }
+  ],
+  "segmentation_stability": {
+    "mean_ari": 0.9719,
+    "min_ari": 0.9489,
+    "max_ari": 0.9935,
+    "pairwise_ari": [
+      0.9701,
+      0.9749,
+      0.974,
+      0.9763,
+      0.9489,
+      0.9882,
+      0.9896,
+      0.9506,
+      0.9529,
+      0.9935
+    ],
+    "is_stable": true,
+    "seeds_tested": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "n_clusters": 4
+  },
+  "clv_metrics": {
+    "total_historical_gmv": 9416761.0,
+    "total_parameterized_net_profit": 282497.53125,
+    "forward_1yr_projected_net_profit": 7959.54,
+    "statistical_suitability": {
+      "total_customers": 57511,
+      "repeat_customers_count": 1474,
+      "repeat_customers_pct": 2.56,
+      "bgnbd_suitable": false,
+      "bgnbd_verdict": "UNSUITABLE for full population: Only 2.56% repeat customers (1474/57511). BG/NBD parameter MLE estimation degenerates on 90%+ one-time buyer datasets.",
+      "gamma_gamma_suitable": true,
+      "gamma_gamma_verdict": "SUITABLE for repeat cohort: Pearson r = -0.008 (p=7.587e-01). Independence assumption holds.",
+      "frequency_monetary_correlation": -0.008,
+      "correlation_p_value": 0.7587,
+      "recommended_strategy": "Dual-Track Approach: Use Heuristic/Cohort-Based CLV for one-time buyers (96.9% of users) and Probabilistic BG/NBD + Gamma-Gamma strictly for the repeat-buyer subset."
+    }
+  },
+  "churn_evaluation": {
+    "active_cohort_size": 57511,
+    "churn_rate": 0.9931317487089426,
+    "heuristic_baseline": {
+      "roc_auc": 0.5842,
+      "pr_auc": 0.9947,
+      "brier_score": 0.5249
+    },
+    "calibrated_logistic_regression": {
+      "roc_auc": 0.6332,
+      "pr_auc": 0.9957,
+      "brier_score": 0.0068,
+      "precision": 0.9931,
+      "recall": 0.9999,
+      "f1": 0.9965,
+      "precision_at_top_10_pct": 0.9972,
+      "test_sample_size": 57511,
+      "churn_rate_actual": 0.9931
+    },
+    "top_features": [
+      {
+        "feature": "total_orders",
+        "importance_score": 0.3206,
+        "direction": "decreases_risk",
+        "attribution_method": "absolute_standardized_coefficient",
+        "normalized_score": 0.2082
+      },
+      {
+        "feature": "avg_order_value",
+        "importance_score": 0.2993,
+        "direction": "increases_risk",
+        "attribution_method": "absolute_standardized_coefficient",
+        "normalized_score": 0.1944
+      },
+      {
+        "feature": "recency_days",
+        "importance_score": 0.2379,
+        "direction": "increases_risk",
+        "attribution_method": "absolute_standardized_coefficient",
+        "normalized_score": 0.1545
+      },
+      {
+        "feature": "avg_basket_size",
+        "importance_score": 0.2126,
+        "direction": "decreases_risk",
+        "attribution_method": "absolute_standardized_coefficient",
+        "normalized_score": 0.1381
+      },
+      {
+        "feature": "avg_review_score",
+        "importance_score": 0.198,
+        "direction": "decreases_risk",
+        "attribution_method": "absolute_standardized_coefficient",
+        "normalized_score": 0.1286
+      }
+    ]
+  },
+  "recommendation_comparison_k5": [
+    {
+      "recommender_name": "popularity",
+      "k": 5,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 0.003852,
+      "recall_at_k": 0.018493,
+      "f1_at_k": 0.006376,
+      "ndcg_at_k": 0.009334,
+      "catalog_coverage_at_k": 0.000182,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.899971,
+      "avg_recommendation_popularity": 264.198055,
+      "popularity_gini": 0.99976
+    },
+    {
+      "recommender_name": "category",
+      "k": 5,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 0.003813,
+      "recall_at_k": 0.018283,
+      "f1_at_k": 0.00631,
+      "ndcg_at_k": 0.009176,
+      "catalog_coverage_at_k": 0.006646,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.883319,
+      "avg_recommendation_popularity": 260.774585,
+      "popularity_gini": 0.999686
+    },
+    {
+      "recommender_name": "copurchase",
+      "k": 5,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 0.003862,
+      "recall_at_k": 0.018549,
+      "f1_at_k": 0.006392,
+      "ndcg_at_k": 0.009386,
+      "catalog_coverage_at_k": 0.010015,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.898302,
+      "avg_recommendation_popularity": 262.446463,
+      "popularity_gini": 0.999708
+    },
+    {
+      "recommender_name": "svd_cf",
+      "k": 5,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 5.8e-05,
+      "recall_at_k": 0.000258,
+      "f1_at_k": 9.5e-05,
+      "ndcg_at_k": 0.000206,
+      "catalog_coverage_at_k": 0.001123,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.78806,
+      "avg_recommendation_popularity": 182.944279,
+      "popularity_gini": 0.999389
+    },
+    {
+      "recommender_name": "content_based",
+      "k": 5,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 4.8e-05,
+      "recall_at_k": 0.000194,
+      "f1_at_k": 7.7e-05,
+      "ndcg_at_k": 0.000114,
+      "catalog_coverage_at_k": 0.055112,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.054975,
+      "avg_recommendation_popularity": 4.200498,
+      "popularity_gini": 0.945889
+    },
+    {
+      "recommender_name": "hybrid",
+      "k": 5,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 0.003842,
+      "recall_at_k": 0.018388,
+      "f1_at_k": 0.006356,
+      "ndcg_at_k": 0.009275,
+      "catalog_coverage_at_k": 0.033231,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.891507,
+      "avg_recommendation_popularity": 260.701244,
+      "popularity_gini": 0.999185
+    }
+  ],
+  "recommendation_comparison_k10": [
+    {
+      "recommender_name": "popularity",
+      "k": 10,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 0.003402,
+      "recall_at_k": 0.032739,
+      "f1_at_k": 0.006163,
+      "ndcg_at_k": 0.013842,
+      "catalog_coverage_at_k": 0.000334,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.800033,
+      "avg_recommendation_popularity": 229.094953,
+      "popularity_gini": 0.999519
+    },
+    {
+      "recommender_name": "category",
+      "k": 10,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 0.003378,
+      "recall_at_k": 0.032489,
+      "f1_at_k": 0.006119,
+      "ndcg_at_k": 0.01367,
+      "catalog_coverage_at_k": 0.012686,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.785183,
+      "avg_recommendation_popularity": 225.879923,
+      "popularity_gini": 0.999376
+    },
+    {
+      "recommender_name": "copurchase",
+      "k": 10,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 0.003397,
+      "recall_at_k": 0.032707,
+      "f1_at_k": 0.006155,
+      "ndcg_at_k": 0.013862,
+      "catalog_coverage_at_k": 0.011745,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.799058,
+      "avg_recommendation_popularity": 227.580351,
+      "popularity_gini": 0.999484
+    },
+    {
+      "recommender_name": "svd_cf",
+      "k": 10,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 4.8e-05,
+      "recall_at_k": 0.000427,
+      "f1_at_k": 8.7e-05,
+      "ndcg_at_k": 0.000263,
+      "catalog_coverage_at_k": 0.002246,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.864511,
+      "avg_recommendation_popularity": 150.161443,
+      "popularity_gini": 0.998828
+    },
+    {
+      "recommender_name": "content_based",
+      "k": 10,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 4.4e-05,
+      "recall_at_k": 0.000363,
+      "f1_at_k": 7.8e-05,
+      "ndcg_at_k": 0.000173,
+      "catalog_coverage_at_k": 0.105581,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.072139,
+      "avg_recommendation_popularity": 4.593532,
+      "popularity_gini": 0.900156
+    },
+    {
+      "recommender_name": "hybrid",
+      "k": 10,
+      "n_eval_customers_total": 20665,
+      "n_eval_customers_with_relevant": 20665,
+      "precision_at_k": 0.003383,
+      "recall_at_k": 0.032473,
+      "f1_at_k": 0.006127,
+      "ndcg_at_k": 0.013733,
+      "catalog_coverage_at_k": 0.073958,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20665/20665 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.791379,
+      "avg_recommendation_popularity": 225.705134,
+      "popularity_gini": 0.998089
+    }
+  ],
+  "segment_breakdown_k10": {
+    "repeat": {
+      "recommender_name": "hybrid_repeat",
+      "k": 10,
+      "n_eval_customers_total": 63,
+      "n_eval_customers_with_relevant": 63,
+      "precision_at_k": 0.006349,
+      "recall_at_k": 0.037037,
+      "f1_at_k": 0.01084,
+      "ndcg_at_k": 0.024121,
+      "catalog_coverage_at_k": 0.01399,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 63/63 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.430688,
+      "avg_recommendation_popularity": 61.25873,
+      "popularity_gini": 0.983497
+    },
+    "sparse": {
+      "recommender_name": "hybrid_sparse",
+      "k": 10,
+      "n_eval_customers_total": 339,
+      "n_eval_customers_with_relevant": 339,
+      "precision_at_k": 0.001475,
+      "recall_at_k": 0.011308,
+      "f1_at_k": 0.002609,
+      "ndcg_at_k": 0.008851,
+      "catalog_coverage_at_k": 0.064975,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 339/339 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.343101,
+      "avg_recommendation_popularity": 53.345133,
+      "popularity_gini": 0.932686
+    },
+    "cold_start": {
+      "recommender_name": "hybrid_cold_start",
+      "k": 10,
+      "n_eval_customers_total": 20263,
+      "n_eval_customers_with_relevant": 20263,
+      "precision_at_k": 0.003405,
+      "recall_at_k": 0.032813,
+      "f1_at_k": 0.00617,
+      "ndcg_at_k": 0.013782,
+      "catalog_coverage_at_k": 0.000303,
+      "n_catalog_products": 32951,
+      "limitation": "Evaluation cohort: 20263/20263 customers had >= 1 relevant item in the eval split. Olist's ~96.9% one-time-buyer rate severely limits the effective cohort size for P@K and R@K. Coverage is computed over 32951 training-period catalog products.",
+      "intra_list_diversity": 0.8,
+      "avg_recommendation_popularity": 229.1,
+      "popularity_gini": 0.999519
+    }
+  },
+  "profiling": {
+    "duration_seconds": 1182.7356,
+    "python_heap_peak_mb": 463.859,
+    "process_peak_rss_mb": 848.262
+  }
+}

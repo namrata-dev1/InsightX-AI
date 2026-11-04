@@ -4,10 +4,11 @@ Supports automatic path resolution across Kaggle, Google Colab, and local enviro
 """
 
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple, Union
 import pandas as pd
 
 from insightx.config import resolve_data_dir
+from insightx.data.adapter import OlistDatasetAdapter, QualityReport
 from insightx.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -38,15 +39,22 @@ class OlistDataLoader:
         self.raw_data_dir = Path(raw_data_dir) if raw_data_dir else resolve_data_dir()
         logger.info(f"OlistDataLoader initialized with data directory: {self.raw_data_dir}")
 
-    def load_table(self, filename: str, nrows: Optional[int] = None) -> pd.DataFrame:
+    def load_table(
+        self,
+        filename: str,
+        nrows: Optional[int] = None,
+        use_adapter: bool = False,
+    ) -> Union[pd.DataFrame, Tuple[pd.DataFrame, QualityReport]]:
         """Loads a single CSV table from the resolved data directory.
 
         Args:
             filename: Name of the CSV file.
             nrows: Optional limit on rows to read (useful for rapid cloud inspection).
+            use_adapter: If True, returns (adapted_df, QualityReport). Defaults to False
+                to maintain strict backward compatibility.
 
         Returns:
-            pd.DataFrame: Loaded DataFrame.
+            pd.DataFrame or Tuple[pd.DataFrame, QualityReport].
         """
         filepath = self.raw_data_dir / filename
         if not filepath.exists():
@@ -56,16 +64,33 @@ class OlistDataLoader:
             )
 
         logger.info(f"Loading {filename} (nrows={nrows})...")
-        return pd.read_csv(filepath, nrows=nrows)
+        df = pd.read_csv(filepath, nrows=nrows)
 
-    def load_all_tables(self, nrows: Optional[int] = None) -> Dict[str, pd.DataFrame]:
+        if use_adapter:
+            table_key = (
+                filename.replace(".csv", "")
+                .replace("olist_", "")
+                .replace("_dataset", "")
+            )
+            adapter = OlistDatasetAdapter()
+            return adapter.adapt_table(table_key, df)
+
+        return df
+
+    def load_all_tables(
+        self,
+        nrows: Optional[int] = None,
+        use_adapter: bool = False,
+    ) -> Union[Dict[str, pd.DataFrame], Tuple[Dict[str, pd.DataFrame], Dict[str, QualityReport], Dict[str, int]]]:
         """Loads all present Olist tables into a dictionary.
 
         Args:
             nrows: Optional row limit per table for quick memory-efficient checks.
+            use_adapter: If True, returns (adapted_tables, reports, orphan_summary).
+                Defaults to False to preserve backward compatibility.
 
         Returns:
-            Dict[str, pd.DataFrame]: Mapping from table short name to DataFrame.
+            Dict[str, pd.DataFrame] or Tuple.
         """
         tables = {}
         for name in OLIST_TABLE_NAMES:
@@ -75,9 +100,14 @@ class OlistDataLoader:
                 .replace("_dataset", "")
             )
             try:
-                tables[table_key] = self.load_table(name, nrows=nrows)
+                tables[table_key] = self.load_table(name, nrows=nrows, use_adapter=False)
             except FileNotFoundError:
                 logger.warning(f"File {name} not found in {self.raw_data_dir}. Skipping.")
+
+        if use_adapter:
+            adapter = OlistDatasetAdapter()
+            return adapter.adapt_all(tables)
+
         return tables
 
     def inspect_dataset_summary(self) -> pd.DataFrame:

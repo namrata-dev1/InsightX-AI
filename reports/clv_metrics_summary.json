@@ -1,0 +1,17 @@
+{
+  "total_historical_gmv": 9416761.0,
+  "total_parameterized_net_profit": 282497.53125,
+  "forward_1yr_projected_net_profit": 7959.54,
+  "statistical_suitability": {
+    "total_customers": 57511,
+    "repeat_customers_count": 1474,
+    "repeat_customers_pct": 2.56,
+    "bgnbd_suitable": false,
+    "bgnbd_verdict": "UNSUITABLE for full population: Only 2.56% repeat customers (1474/57511). BG/NBD parameter MLE estimation degenerates on 90%+ one-time buyer datasets.",
+    "gamma_gamma_suitable": true,
+    "gamma_gamma_verdict": "SUITABLE for repeat cohort: Pearson r = -0.008 (p=7.587e-01). Independence assumption holds.",
+    "frequency_monetary_correlation": -0.008,
+    "correlation_p_value": 0.7587,
+    "recommended_strategy": "Dual-Track Approach: Use Heuristic/Cohort-Based CLV for one-time buyers (96.9% of users) and Probabilistic BG/NBD + Gamma-Gamma strictly for the repeat-buyer subset."
+  }
+}

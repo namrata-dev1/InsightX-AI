@@ -176,23 +176,41 @@ class RecommendationEvaluator:
         all_recommended_products: set = set()
         n_with_relevant = 0
 
+        train_cids = (
+            set(train_interaction_df["customer_unique_id"].unique())
+            if "customer_unique_id" in train_interaction_df.columns
+            else set()
+        )
+        cold_rec_cache: Optional[List[str]] = None
+        has_cold_cache = False
+
         for cid, relevant in relevant_items.items():
             if len(relevant) == 0:
                 continue
 
-            # Get recommendations from the fitted recommender
-            try:
-                rec_df = recommender.recommend(customer_id=cid, k=self.k)
-            except Exception as e:
-                logger.warning(
-                    f"[{recommender_name}] recommend() failed for customer {cid}: {e}"
-                )
-                rec_df = pd.DataFrame(columns=["product_id"])
-
-            if len(rec_df) == 0:
-                recommended_products = []
+            # Check if customer is cold-start (unseen in training)
+            if cid not in train_cids:
+                if not has_cold_cache:
+                    try:
+                        rec_df = recommender.recommend(customer_id=cid, k=self.k)
+                        cold_rec_cache = rec_df["product_id"].tolist() if len(rec_df) > 0 else []
+                    except Exception as e:
+                        logger.warning(
+                            f"[{recommender_name}] recommend() failed for cold customer {cid}: {e}"
+                        )
+                        cold_rec_cache = []
+                    has_cold_cache = True
+                recommended_products = cold_rec_cache
             else:
-                recommended_products = rec_df["product_id"].tolist()
+                # Warm customer (seen in training data)
+                try:
+                    rec_df = recommender.recommend(customer_id=cid, k=self.k)
+                    recommended_products = rec_df["product_id"].tolist() if len(rec_df) > 0 else []
+                except Exception as e:
+                    logger.warning(
+                        f"[{recommender_name}] recommend() failed for customer {cid}: {e}"
+                    )
+                    recommended_products = []
 
             all_recommended_products.update(recommended_products)
 

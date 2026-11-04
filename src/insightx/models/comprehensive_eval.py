@@ -144,12 +144,30 @@ class ComprehensiveRecommendationEvaluator(BaseRecommendationEvaluator):
         diversity_scores: List[float] = []
         rec_frequency: Dict[str, int] = {}
 
+        train_cids = (
+            set(train_interaction_df["customer_unique_id"].unique())
+            if "customer_unique_id" in train_interaction_df.columns
+            else set()
+        )
+        cold_rec_cache_str: Optional[List[str]] = None
+        has_cold_cache_str = False
+
         for cid in eval_cids:
-            try:
-                rec_df = recommender.recommend(customer_id=cid, k=self.k)
-                recs = rec_df["product_id"].astype(str).tolist() if len(rec_df) > 0 else []
-            except Exception:
-                recs = []
+            if cid not in train_cids:
+                if not has_cold_cache_str:
+                    try:
+                        rec_df = recommender.recommend(customer_id=cid, k=self.k)
+                        cold_rec_cache_str = rec_df["product_id"].astype(str).tolist() if len(rec_df) > 0 else []
+                    except Exception:
+                        cold_rec_cache_str = []
+                    has_cold_cache_str = True
+                recs = cold_rec_cache_str
+            else:
+                try:
+                    rec_df = recommender.recommend(customer_id=cid, k=self.k)
+                    recs = rec_df["product_id"].astype(str).tolist() if len(rec_df) > 0 else []
+                except Exception:
+                    recs = []
 
             all_rec_lists.append(recs)
             if len(recs) >= 2 and cat_map:
