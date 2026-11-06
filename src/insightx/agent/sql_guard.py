@@ -86,7 +86,7 @@ DEFAULT_GUARDRAILS = {
     },
     "allowed_functions": [
         "SUM", "AVG", "COUNT", "MIN", "MAX", "ROUND", "STRFTIME", "DATE_TRUNC",
-        "COALESCE", "NULLIF", "ABS", "DATE_DIFF"
+        "COALESCE", "NULLIF", "ABS", "DATE_DIFF", "CAST"
     ],
     "prohibited_keywords": [
         "read_csv", "read_parquet", "read_json", "httpfs", "install", "load",
@@ -215,12 +215,17 @@ class SQLGuard:
                 "Only read-only SELECT queries are permitted."
             )
 
-        # 3. Detect CTE names to register local temporary table scopes
+        # 3. Detect CTE names and SELECT aliases to register local scopes
         cte_names: Set[str] = set()
         for cte in ast_root.find_all(exp.CTE):
             cte_alias = cte.alias
             if cte_alias:
                 cte_names.add(cte_alias.lower())
+
+        select_aliases: Set[str] = set()
+        for alias_node in ast_root.find_all(exp.Alias):
+            if alias_node.alias:
+                select_aliases.add(alias_node.alias.lower())
 
         # 3b. Expand wildcard expressions into explicit approved column projections.
         #     This must occur AFTER CTE detection and BEFORE table/column validation
@@ -247,8 +252,15 @@ class SQLGuard:
                 )
 
         # 5. Validate all Function nodes (including nested functions)
+        canonical_func_map = {
+            "TIME_TO_STR": "STRFTIME",
+            "TIMESTAMP_TRUNC": "DATE_TRUNC",
+        }
         for func_node in ast_root.find_all(exp.Func, exp.Anonymous):
-            func_name = func_node.sql_name().upper() if hasattr(func_node, "sql_name") else func_node.key.upper()
+            if isinstance(func_node, exp.Cast):
+                continue
+            raw_func_name = func_node.sql_name().upper() if hasattr(func_node, "sql_name") else func_node.key.upper()
+            func_name = canonical_func_map.get(raw_func_name, raw_func_name)
             
             # Check against prohibited keyword blacklist
             if func_name.lower() in self.prohibited_keywords:
@@ -270,6 +282,10 @@ class SQLGuard:
             # Wildcards against CTE outputs cannot be validated statically (dynamic schema).
             # Wildcards against real views are safe because the DataFrame is pre-filtered.
             if col_name == "*":
+                continue
+
+            # Skip columns that match SELECT aliases defined in this query
+            if col_name in select_aliases:
                 continue
 
             # Skip columns whose table reference is a CTE local name (dynamic schema)
