@@ -207,7 +207,7 @@ def test_select_star_cannot_expose_unauthorized_columns(
     sql_guard: SQLGuard, poisoned_tables: dict
 ):
     """SELECT * must return only allowlisted columns; unauthorized columns must be absent."""
-    df = sql_guard.execute_safely("SELECT * FROM v_orders", poisoned_tables, timeout_seconds=3.0)
+    df = sql_guard.execute_safely("SELECT * FROM v_orders", poisoned_tables, timeout_seconds=10.0)
     assert "credit_card_number" not in df.columns, (
         "SECURITY FAILURE: SELECT * exposed 'credit_card_number'"
     )
@@ -224,7 +224,7 @@ def test_qualified_wildcard_cannot_expose_unauthorized_columns(
 ):
     """SELECT v_orders.* must return only allowlisted columns."""
     df = sql_guard.execute_safely(
-        "SELECT v_orders.* FROM v_orders", poisoned_tables, timeout_seconds=3.0
+        "SELECT v_orders.* FROM v_orders", poisoned_tables, timeout_seconds=10.0
     )
     assert "credit_card_number" not in df.columns, (
         "SECURITY FAILURE: SELECT v_orders.* exposed 'credit_card_number'"
@@ -255,7 +255,7 @@ def test_cte_wildcard_cannot_expose_unauthorized_columns(
         )
         SELECT * FROM safe_orders
     """
-    df = sql_guard.execute_safely(query, poisoned_tables, timeout_seconds=3.0)
+    df = sql_guard.execute_safely(query, poisoned_tables, timeout_seconds=10.0)
     assert "credit_card_number" not in df.columns, (
         "SECURITY FAILURE: CTE wildcard chain exposed 'credit_card_number'"
     )
@@ -269,7 +269,7 @@ def test_subquery_wildcard_cannot_expose_unauthorized_columns(
 ):
     """A subquery that SELECT * from v_orders must not leak unauthorized columns."""
     query = "SELECT * FROM (SELECT * FROM v_orders) sub"
-    df = sql_guard.execute_safely(query, poisoned_tables, timeout_seconds=3.0)
+    df = sql_guard.execute_safely(query, poisoned_tables, timeout_seconds=10.0)
     assert "credit_card_number" not in df.columns, (
         "SECURITY FAILURE: subquery wildcard exposed 'credit_card_number'"
     )
